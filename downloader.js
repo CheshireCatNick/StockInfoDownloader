@@ -50,8 +50,8 @@ function downloadData(year, month, endY, endM, stockNo, result, res) {
     if (data === 503 || data.data === null || data.data === undefined) 
       Debug.Warning(`cannot get data on ${year}/${month}!`);
     else 
-      for (let d of data.data)    
-        result.push(d);
+      for (let i = 0; i < data.data.length - 1; i++)    
+        result.push(data.data[i]);
     month++;
     if (month > 12) {
       year++;
