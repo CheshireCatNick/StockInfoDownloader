@@ -36,6 +36,7 @@ function downloadData(year, month, endY, endM, stockNo, result, res) {
     res.setHeader('Content-disposition', `attachment; filename=${stockNo}.csv`);
     res.set('Content-Type', 'text/csv');
     res.send(csvFile);
+    processing = false;
     return;
   }
   Debug.info([`Downloading data of ${stockNo} on ${year}/${month}...`]);
@@ -57,11 +58,21 @@ function downloadData(year, month, endY, endM, stockNo, result, res) {
       year++;
       month = 1;
     }
+    console.log('calling', year, month);
     return downloadData(year, month, endY, endM, stockNo, result, res);
   });
 }
-
+let processing = false;
 router.get('/', (req, res) => {
+  res.setTimeout(20 * 60 * 1000, () => {
+    Debug.warning(['Request timeout!']);
+  });
+  console.log(processing);
+  if (processing) {
+    Debug.warning(['Double request!']);
+    return; 
+  }
+  processing = true;
   let result = [];
   const startY = parseInt(req.query.startY);
   const endY = parseInt(req.query.endY);
