@@ -64,7 +64,7 @@ function downloadData(year, month, endY, endM, stockNo, result, res) {
 }
 let processing = false;
 router.get('/', (req, res) => {
-  res.setTimeout(20 * 60 * 1000, () => {
+  res.setTimeout(60 * 60 * 1000, () => {
     Debug.warning(['Request timeout!']);
   });
   console.log(processing);
