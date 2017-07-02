@@ -48,18 +48,22 @@ function downloadData(year, month, endY, endM, stockNo, result, res) {
   //console.log(yearStr, monthStr); 
   path += `date=${yearStr}${monthStr}01&stockNo=${stockNo}`;
   restClient.get(host, 80, path, (data) => {
-    if (data === 503 || data.data === null || data.data === undefined) 
+    if (data === 503 || data.data === null || data.data === undefined) {
       Debug.warning([`cannot get data on ${year}/${month}!`]);
-    else 
+      // request again
+      downloadData(year, month, endY, endM, stockNo, result, res);
+    }
+    else {
       for (let i = 0; i < data.data.length - 1; i++)    
         result.push(data.data[i]);
-    month++;
-    if (month > 12) {
-      year++;
-      month = 1;
+      month++;
+      if (month > 12) {
+        year++;
+        month = 1;
+      }
+      downloadData(year, month, endY, endM, stockNo, result, res);
     }
-    console.log('calling', year, month);
-    return downloadData(year, month, endY, endM, stockNo, result, res);
+    return;
   });
 }
 let processing = false;
@@ -67,7 +71,6 @@ router.get('/', (req, res) => {
   res.setTimeout(60 * 60 * 1000, () => {
     Debug.warning(['Request timeout!']);
   });
-  console.log(processing);
   if (processing) {
     Debug.warning(['Double request!']);
     return; 
