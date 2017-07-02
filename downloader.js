@@ -48,7 +48,7 @@ function downloadData(year, month, endY, endM, stockNo, result, res) {
   path += `date=${yearStr}${monthStr}01&stockNo=${stockNo}`;
   restClient.get(host, 80, path, (data) => {
     if (data === 503 || data.data === null || data.data === undefined) 
-      Debug.warning(`cannot get data on ${year}/${month}!`);
+      Debug.warning([`cannot get data on ${year}/${month}!`]);
     else 
       for (let i = 0; i < data.data.length - 1; i++)    
         result.push(data.data[i]);
